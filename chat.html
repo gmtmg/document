@@ -48,14 +48,35 @@
       <details class="more chat-how">
         <summary>チャシーは、どうやって動いているの？</summary>
         <p class="more-note">チャシーは、<a href="ai-app.html#flow">AIアプリのレッスン</a>で学んだしくみそのままで動いています。</p>
-        <ol class="three">
+        <ol class="three" data-mode="key">
+          <li>あなたが書いた質問に、<b>これまでの会話（直近20件）</b>と<b>チャシーの指示書</b>（性格やルール）を足して、注文票を作る</li>
+          <li>あなたが入れた<b>APIキー</b>を付けて、このブラウザから直接OpenAIのAIに送る</li>
+          <li>AIの返事が少しずつ届くので、それを画面に表示する。図があれば絵にする</li>
+        </ol>
+        <ol class="three" data-mode="server" hidden>
           <li>あなたが書いた質問と、<b>これまでの会話（直近20件）</b>を、チャシーのサーバーに送る</li>
           <li>サーバーが<b>チャシーの指示書</b>（性格やルール）と<b>APIキー</b>を足して、OpenAIのAIに送る</li>
           <li>AIの返事が少しずつ届くので、それを画面に表示する。図があれば絵にする</li>
         </ol>
-        <p class="more-note">会話の記録は、このブラウザの中にだけ保存されます。「新しい会話」を押すと消えます。</p>
+        <p class="more-note">会話の記録とAPIキーは、このブラウザの中にだけ保存されます。「新しい会話」を押すと会話が消えます。</p>
       </details>
     </div>
+  </section>
+
+  <section class="key-card" id="keySetup" hidden>
+    <h2>はじめに：APIキーを入れてね</h2>
+    <p>チャシーとお話しするには、<b>OpenAIのAPIキー</b>が必要です。このサイトを紹介してくれた人から受け取ったキーを、下に貼り付けてください。</p>
+    <form class="key-form" id="keyForm">
+      <label class="visually-hidden" for="apiKey">OpenAIのAPIキー</label>
+      <input type="password" id="apiKey" autocomplete="off" spellcheck="false" placeholder="sk- で始まるキーを貼り付け">
+      <button class="btn" type="submit">保存してはじめる</button>
+    </form>
+    <p class="key-msg" id="keyMsg" aria-live="polite"></p>
+    <ul class="key-notes">
+      <li>キーは<b>このブラウザの中にだけ</b>保存されます。OpenAI以外には送りません。</li>
+      <li>キーはお金のかかる大事なものです。ほかの人に見せたり、SNSに書いたりしないでね。</li>
+      <li>共用のパソコンでは、使い終わったら下の「キーを消す」を押してください。</li>
+    </ul>
   </section>
 
   <div class="chat-log" id="chatLog" aria-live="polite">
@@ -83,7 +104,10 @@
   </div>
   <div class="composer-foot">
     <span>Enterで送信、Shift＋Enterで改行。チャシーはAIなので、まちがえることもあります。</span>
-    <button type="button" class="linkish" id="newChat">新しい会話</button>
+    <span class="foot-actions">
+      <span id="keyStatus" hidden>APIキー：このブラウザに保存ずみ <button type="button" class="linkish" id="clearKey">キーを消す</button></span>
+      <button type="button" class="linkish" id="newChat">新しい会話</button>
+    </span>
   </div>
 </form>
 

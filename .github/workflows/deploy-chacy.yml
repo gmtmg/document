@@ -1,6 +1,9 @@
 # チャシーのサーバー（worker/）を Cloudflare Workers に公開する。
 # OpenAI の APIキーは GitHub の Secrets から渡すので、コードやサイトには一切出てこない。
 #
+# いまのチャシーは「キー入力方式」なので、このワークフローは使っていません。
+# 下の Secrets を登録すると、自動で「サーバー方式」の公開が動くようになります（登録するまではテストだけ動きます）。
+#
 # 必要な Secrets（Settings → Secrets and variables → Actions）:
 #   OPENAI_API_KEY         OpenAI の APIキー
 #   CLOUDFLARE_API_TOKEN   Cloudflare の APIトークン（「Edit Cloudflare Workers」テンプレートで作成）
@@ -17,6 +20,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      HAS_CLOUDFLARE: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -27,7 +32,12 @@ jobs:
       - name: Test
         run: node worker/test/run.mjs
 
+      - name: Skip deploy (Cloudflare is not set up)
+        if: env.HAS_CLOUDFLARE != 'true'
+        run: echo "CLOUDFLARE_API_TOKEN が登録されていないので、公開はしません（キー入力方式ではサーバーは不要です）。"
+
       - name: Deploy to Cloudflare Workers
+        if: env.HAS_CLOUDFLARE == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

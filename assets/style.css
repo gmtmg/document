@@ -87,6 +87,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -976,3 +977,16 @@ body.page-chat { --accent: var(--c-chat); }
   .chacy-banner { grid-template-columns: auto 1fr; }
   .chacy-banner .go { grid-column: 1 / -1; }
 }
+
+/* チャシー：APIキーの入力 */
+.key-card { background: var(--sheet); border: 2px solid var(--accent); border-radius: var(--radius); padding: 1.1rem 1.2rem; display: grid; gap: 0.7rem; }
+.key-card h2 { font-size: 1.15rem; }
+.key-card p { font-size: 0.93rem; }
+.key-form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.key-form input { flex: 1 1 14rem; min-width: 0; font: inherit; font-family: var(--f-mono); font-size: 0.9rem; padding: 0.5rem 0.9rem; border-radius: 999px; border: 2px solid var(--line); background: var(--paper); color: var(--ink); }
+.key-form input:focus { outline: none; border-color: var(--accent); }
+.key-msg { min-height: 0; font-size: 0.88rem; }
+.key-msg:empty { display: none; }
+.key-msg.bad { color: var(--ng); font-weight: 700; }
+.key-notes { margin: 0; padding-left: 1.2rem; font-size: 0.82rem; color: var(--ink-soft); display: grid; gap: 0.15rem; }
+.foot-actions { display: inline-flex; gap: 1rem; flex-wrap: wrap; align-items: center; }

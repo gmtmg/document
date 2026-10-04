@@ -2,9 +2,14 @@
   "use strict";
   const { $, $$, esc, store } = window.Site;
 
-  // 自分のパソコンで worker/dev-server.mjs を動かしているときは、同じ場所の /chat を使う
-  const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);
+  // サーバー方式：CHACY_API_URL が書いてあるとき（自分のパソコンで worker/dev-server.mjs を動かしているときも）
+  // キー入力方式：それ以外。使う人が入れた APIキーで、ブラウザから直接 OpenAI に送る
+  const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname) && window.CHACY_MODE !== "key";
   const API_URL = window.CHACY_API_URL || (isLocal ? "/chat" : "");
+  const KEY_MODE = !API_URL;
+  const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+  const MODEL = window.CHACY_MODEL || "gpt-5.4-mini";
+  const API_KEY_STORE = "chacy-openai-key";
   const KEY = "chacy-history";
   const MAX_SEND = 20;   // サーバーに送る会話の数（直近20件）
   const MAX_KEEP = 60;   // ブラウザに残しておく会話の数
@@ -135,6 +140,87 @@
     $("#chips").hidden = history.length > 0;
   }
 
+  /* ---------- 送り先（サーバー方式 / キー入力方式） ---------- */
+  let systemPrompt = null;
+  async function loadSystemPrompt() {
+    if (!systemPrompt) {
+      const url = new URL("worker/src/system-prompt.js", document.baseURI).href;
+      systemPrompt = (await import(url)).SYSTEM_PROMPT;
+    }
+    return systemPrompt;
+  }
+
+  async function request(messages, signal) {
+    if (!KEY_MODE) {
+      return fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages }),
+        signal,
+      });
+    }
+    // キー入力方式：指示書と会話とキーで注文票を作り、OpenAI に直接送る
+    return fetch(OPENAI_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey()}` },
+      body: JSON.stringify({
+        model: MODEL,
+        stream: true,
+        max_completion_tokens: 2000,
+        reasoning_effort: "low",
+        messages: [{ role: "system", content: await loadSystemPrompt() }, ...messages],
+      }),
+      signal,
+    });
+  }
+
+  async function errorMessage(res) {
+    let body = {};
+    try { body = await res.json(); } catch { /* 中身がなくてもよい */ }
+    if (!KEY_MODE) return body.error ? `ごめんね、${body.error}。` : "うまくつながらなかったよ。少し待ってから、もう一度送ってみてね。";
+    const code = body.error && body.error.code;
+    if (res.status === 401) {
+      showKeySetup(true, "このAPIキーは使えないみたい。キーをもう一度確かめて、入れ直してね。");
+      return "ごめんね、APIキーがまちがっているか、使えなくなっているみたい。上でキーを入れ直してね。";
+    }
+    if (code === "insufficient_quota") return "ごめんね、このAPIキーの利用上限に達しているみたい。キーをくれた人に伝えてね。";
+    if (res.status === 429) return "ちょっと混み合っているみたい。少し待ってから、もう一度送ってみてね。";
+    return "AIとうまくお話しできなかったよ。少し待ってから、もう一度送ってみてね。";
+  }
+
+  /* ---------- APIキーの入力 ---------- */
+  const apiKey = () => (KEY_MODE ? store.get(API_KEY_STORE) || "" : "");
+  function showKeySetup(show, message, scroll = true) {
+    $("#keySetup").hidden = !show;
+    $("#keyMsg").textContent = message || "";
+    $("#keyMsg").classList.toggle("bad", Boolean(message));
+    $("#keyStatus").hidden = !KEY_MODE || !apiKey() || show;
+    input.placeholder = show ? "先にAPIキーを入れてね" : "チャシーに質問してね";
+    if (show && scroll) $("#keySetup").scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  $("#keyForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const key = $("#apiKey").value.trim();
+    if (!/^sk-[\w-]{10,}$/.test(key)) {
+      $("#keyMsg").textContent = "sk- で始まるキーを、まるごと貼り付けてね。";
+      $("#keyMsg").classList.add("bad");
+      return;
+    }
+    store.set(API_KEY_STORE, key);
+    $("#apiKey").value = "";
+    if (!apiKey()) {
+      $("#keyMsg").textContent = "このブラウザではキーを保存できなかったよ。プライベートブラウズをやめてから、もう一度試してね。";
+      $("#keyMsg").classList.add("bad");
+      return;
+    }
+    showKeySetup(false);
+    input.focus();
+  });
+  $("#clearKey").addEventListener("click", () => {
+    try { localStorage.removeItem(API_KEY_STORE); } catch { /* 消せなくても表示は戻す */ }
+    showKeySetup(true, "キーを消したよ。また使うときは、キーを入れてね。");
+  });
+
   /* ---------- 送信と、少しずつ届く返事 ---------- */
   function setBusy(on) {
     sendBtn.textContent = on ? "止める" : "送る";
@@ -147,9 +233,10 @@
     thinking(turn, true);
     scrollDown();
 
-    if (!API_URL) {
+    if (KEY_MODE && !apiKey()) {
       thinking(turn, false);
-      showError(turn, "ごめんね、チャシーはまだサーバーとつながっていないみたい。サイトを作った人が設定を終えると、お話しできるようになるよ。");
+      showError(turn, "先に、上の「APIキーを入れてね」のところにキーを入れてね。");
+      showKeySetup(true);
       return;
     }
 
@@ -158,17 +245,8 @@
     let text = "";
     let streaming = true;
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history.slice(-MAX_SEND) }),
-        signal: controller.signal,
-      });
-      if (!res.ok) {
-        let message = "うまくつながらなかったよ。少し待ってから、もう一度送ってみてね。";
-        try { const j = await res.json(); if (j.error) message = `ごめんね、${j.error}。`; } catch { /* そのまま */ }
-        throw Object.assign(new Error(message), { friendly: true });
-      }
+      const res = await request(history.slice(-MAX_SEND), controller.signal);
+      if (!res.ok) throw Object.assign(new Error(await errorMessage(res)), { friendly: true });
 
       const bubble = $(".bubble-c", turn);
       const reader = res.body.getReader();
@@ -223,6 +301,10 @@
   function send(text) {
     text = text.trim();
     if (!text || controller) return;
+    if (KEY_MODE && !apiKey()) {
+      showKeySetup(true, "先にAPIキーを入れてね。");
+      return;
+    }
     history.push({ role: "user", content: text });
     save();
     addUser(text);
@@ -274,6 +356,8 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
+  $$("[data-mode]").forEach((el) => { el.hidden = el.dataset.mode !== (KEY_MODE ? "key" : "server"); });
+  if (KEY_MODE) showKeySetup(!apiKey(), "", false);
   renderAll();
   if (history.length) scrollDown();
 })();
