@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>敬語変換アプリ</title>
+<h1>敬語変換アプリ</h1>
+<textarea id="input" rows="4" cols="40">明日の会議、ちょっと遅れます。資料は後で送ります。</textarea>
+<p><button id="go">敬語にする</button></p>
+<p id="output"></p>
+<script>
+  document.getElementById("go").onclick = async () => {
+    const text = document.getElementById("input").value;
+    document.getElementById("output").textContent = "変換中…";
+    const res = await fetch("/api/keigo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    const { answer } = await res.json();
+    document.getElementById("output").textContent = answer;
+  };
+</script>
