@@ -505,3 +505,80 @@ mark { background: linear-gradient(transparent 45%, var(--marker) 45%); color: i
 /* グリッドの子が長いコードで広がらないようにする */
 .stack > *, .lab > *, .lab-col > *, .anatomy > *, .code-split > *, .flow-detail > *,
 .hero-grid > *, .memory-grid > *, .hash-explain > *, .files > *, .compare > *, .steps-list li > div > * { min-width: 0; }
+
+/* ---------- やさしい版の部品 ---------- */
+.three { margin: 0.25rem 0 0; padding-left: 1.3rem; display: grid; gap: 0.35rem; }
+.three li { line-height: 1.7; }
+
+.cast-title { font-size: var(--step--1); font-weight: 700; letter-spacing: 0.08em; color: var(--ink-soft); margin-bottom: 0.75rem; }
+.cast { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.cast-card { background: var(--sheet); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.9rem 1rem; display: grid; gap: 0.15rem; align-content: start; }
+.cast-card b { font-size: 1.05rem; }
+.cast-card span { font-family: var(--f-display); color: var(--accent); font-size: 1.05rem; }
+.cast-card p { font-size: 0.86rem; color: var(--ink-soft); line-height: 1.65; margin-top: 0.3rem; }
+
+.oneword {
+  max-width: 44rem;
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: 1.8;
+  padding: 1rem 1.2rem;
+  background: var(--sheet);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+}
+.oneword small { display: block; font-size: var(--step--1); letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.2rem; }
+
+/* 注文票（見た目のカード版） */
+.oslip {
+  position: relative; background: var(--sheet); border: 1px solid var(--line); border-radius: 4px;
+  padding: 1.3rem 1rem 0.9rem; display: grid; gap: 0.5rem;
+  box-shadow: 0 18px 40px -28px rgba(0,0,0,.4);
+}
+.oslip::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px;
+  background: radial-gradient(circle at 6px 0, var(--paper) 4px, transparent 4.5px) 0 0 / 12px 8px repeat-x;
+}
+.oslip-head { font-family: var(--f-display); font-size: 0.95rem; border-bottom: 2px dashed var(--line); padding-bottom: 0.4rem; }
+.ofield { display: grid; grid-template-columns: 6.6rem 1fr; gap: 0.6rem; align-items: start; padding: 0.35rem 0.4rem; border-radius: 6px; transition: background 0.2s; }
+.ofield p { font-size: 0.9rem; line-height: 1.65; overflow-wrap: anywhere; white-space: pre-wrap; min-width: 0; }
+.ofield p small { display: block; color: var(--ink-soft); font-size: 0.78rem; }
+.ofield.dim p { color: var(--ink-soft); }
+.ofield[data-part] { cursor: pointer; }
+.ofield.on { background: var(--marker); color: var(--marker-ink); }
+.ofield.on p, .ofield.on p small { color: var(--marker-ink); }
+.olabel { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 0.05rem 0.5rem; border-radius: 4px; line-height: 1.7; background: var(--paper); color: var(--ink-soft); white-space: nowrap; justify-self: start; }
+.olabel.system { color: var(--sys); background: var(--sys-bg); }
+.olabel.user { color: var(--usr); background: var(--usr-bg); }
+.olabel.assistant { color: var(--ai); background: var(--ai-bg); }
+.layer-name .olabel { margin-right: 0.1rem; }
+.flip-back .oslip { height: 100%; align-content: start; }
+
+.compare-sub { font-size: 0.9rem; color: var(--ink-soft); margin-top: -0.3rem; }
+
+details.more { border: 1px dashed var(--line); border-radius: var(--radius); padding: 0.6rem 1rem; background: color-mix(in srgb, var(--sheet) 60%, transparent); }
+details.more > summary { cursor: pointer; font-weight: 700; font-size: 0.95rem; color: var(--ink-soft); }
+details.more[open] > summary { margin-bottom: 0.8rem; color: var(--ink); }
+.more-note { font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 0.8rem; max-width: var(--measure); }
+
+.carry { display: grid; gap: 0.5rem; align-content: start; background: var(--paper); border-radius: var(--radius); padding: 1rem; min-height: 11rem; }
+.carry-label { font-size: var(--step--1); font-weight: 700; letter-spacing: 0.08em; color: var(--ink-soft); }
+.carry .oslip { box-shadow: none; }
+.carry-text { background: var(--sheet); border-radius: 8px; padding: 0.7rem 0.9rem; font-size: 0.95rem; line-height: 1.7; }
+
+.parts4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.part4 { background: var(--sheet); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; display: grid; gap: 0.3rem; align-content: start; }
+.part4.ai { background: var(--marker); color: var(--marker-ink); border-color: transparent; }
+.part4-no { font-family: var(--f-display); font-size: 1.4rem; line-height: 1; }
+.part4 b { font-size: 1.02rem; }
+.part4 p { font-size: 0.88rem; line-height: 1.65; }
+.part4 em { font-style: normal; font-size: 0.75rem; font-weight: 700; justify-self: start; padding: 0 0.5rem; border-radius: 999px; border: 1px solid currentColor; opacity: 0.75; }
+
+@media (max-width: 860px) {
+  .cast, .parts4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .cast, .parts4 { grid-template-columns: 1fr; }
+  .ofield { grid-template-columns: 1fr; gap: 0.2rem; }
+  .oneword { font-size: 1.05rem; }
+}
