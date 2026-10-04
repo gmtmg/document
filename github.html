@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GitHubってなに？</title>
+<meta name="description" content="アプリ作りのセーブ機能Gitと、みんなの倉庫GitHub。何も知らないところから、コミット・プッシュ・ブランチを触って学べます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Dela+Gothic+One&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="page-git">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="long">アプリ作るための基本とか</span><span class="short">トップ</span></a>
+    <nav class="chapnav" aria-label="章の移動">
+      <a href="#zero">0 そもそも</a>
+      <a href="#save">1 セーブ</a>
+      <a href="#cloud">2 GitHub</a>
+      <a href="#sync">3 送る・受け取る</a>
+      <a href="#branch">4 ブランチ</a>
+      <a href="#real">5 実例</a>
+      <a href="#quiz">6 クイズ</a>
+    </nav>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="top">
+
+<section class="hero wrap">
+  <div style="max-width: 46rem">
+    <nav class="crumb" aria-label="現在地"><a href="index.html">アプリ作るための基本とか</a><span>›</span><span>GitHubってなに？</span></nav>
+    <h1><span class="small">アプリを作る人が、みんな使っている</span>GitHubってなに？</h1>
+    <p class="lead">GitHub（ギットハブ）は、アプリのファイルを<mark>「セーブ」して「みんなで共有」する</mark>ための場所です。ゲームのセーブにたとえて説明します。</p>
+    <div class="hero-goal">
+      <b>先に答えを3行で</b>
+      <ol class="three">
+        <li><b>Git</b>は、ファイルの変更をセーブする道具（自分のパソコンの中）。</li>
+        <li><b>GitHub</b>は、そのセーブを預けて、みんなで共有するインターネット上の倉庫。</li>
+        <li>アプリ作りは「書く → セーブ → GitHubに送る」のくり返し。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 第0章 ================= -->
+<section class="chapter wrap chapter-zero" id="zero" data-chapter>
+  <div class="chapter-head">
+    <span class="zero-badge">Chapter 0 ／ そもそもの前提</span>
+    <h2>そもそも、何に困っているの？</h2>
+    <p class="lead">GitHubは「困りごと」を解決するための道具です。まず困りごとから見ていきます。</p>
+  </div>
+
+  <div class="stack">
+    <div class="prose">
+      <p>アプリは、たくさんの<b>ファイル</b>（文字が書かれたデータ）でできています（<a href="index.html#basics">前提5</a>）。アプリを作るとは、そのファイルを<b>何度も何度も書き直していく</b>ことです。</p>
+      <p>何度も書き直していると、レポートや資料を作るときと同じ困りごとが起きます。こんな経験、ありませんか？</p>
+    </div>
+
+    <div class="duo">
+      <div class="filehell" aria-label="よくあるファイル名の例">
+        <span>企画書.docx</span>
+        <span>企画書_修正.docx</span>
+        <span>企画書_修正_最新.docx</span>
+        <span>企画書_最新_田中さん確認済み.docx</span>
+        <span>企画書_本当に最終.docx</span>
+        <span>企画書_本当に最終(1).docx</span>
+      </div>
+      <div class="troubles" style="grid-template-columns:1fr">
+        <div class="reason"><b>困りごと1：どれが最新？</b><p>コピーが増えて、どれが正しいのかわからなくなる。</p></div>
+        <div class="reason"><b>困りごと2：元に戻せない</b><p>「昨日の方がよかった」と思っても、上書きしていたら戻せない。</p></div>
+        <div class="reason"><b>困りごと3：みんなで直すとぶつかる</b><p>2人が同じファイルを同時に直すと、片方の変更が消えてしまう。</p></div>
+      </div>
+    </div>
+
+    <p class="oneword"><small>ひとことで言うと</small>アプリのファイルは、文書よりずっと数が多く、何百回も書き直します。<br>だから<mark>「いつ・誰が・どこを変えたか」を自動で記録してくれる道具</mark>が必要です。それがGitとGitHubです。</p>
+  </div>
+</section>
+
+<!-- ================= 第1章 ================= -->
+<section class="chapter wrap" id="save" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 1</span>
+    <h2>Gitは、ファイルの「セーブ機能」</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>Git（ギット）は、ゲームのセーブのように、<mark>ファイルの状態をいつでも記録して、いつでも戻れる</mark>ようにする道具です。<br>セーブすることを<b>「コミット」</b>と呼びます。</p>
+
+    <div class="prose">
+      <p>ゲームでボス戦の前にセーブするように、アプリ作りでも「ここまでできた」というところでセーブ（コミット）します。コミットするときは<b>「何をしたか」のメモ</b>を付けます。</p>
+      <p>下で実際にやってみましょう。自己紹介ページのファイルを書き換えて、メモを付けてセーブしてください。右の記録を押すと、その時点の中身と<b>「どこが変わったか」</b>が見られます。</p>
+    </div>
+
+    <div class="saver">
+      <div class="panel">
+        <div class="panel-title">ファイル：自己紹介.txt（書き換えてみよう）</div>
+        <textarea class="editor" id="gitEditor" aria-label="ファイルの中身" spellcheck="false"></textarea>
+        <div class="save-row">
+          <input type="text" id="gitMsg" placeholder="何をしたかのメモ（例：趣味を追加）" aria-label="コミットのメモ">
+          <button class="btn" type="button" id="gitCommit">セーブ（コミット）する</button>
+        </div>
+        <p class="layers-caption" id="gitStatus"></p>
+      </div>
+      <div class="panel">
+        <div class="panel-title">セーブの記録（新しい順）</div>
+        <ol class="timeline" id="gitTimeline"></ol>
+        <div class="panel-title" style="margin-top:1rem">選んだセーブで変わったところ</div>
+        <div class="diff" id="gitDiff"></div>
+        <div class="btn-row" style="margin-top:0.75rem">
+          <button class="btn ghost" type="button" id="gitRestore">この時点に戻す</button>
+        </div>
+      </div>
+    </div>
+    <p class="layers-caption"><span class="side-tag front" style="background:var(--add-bg);color:var(--add-fg)">緑</span> は追加された行、<span class="side-tag" style="background:var(--del-bg);color:var(--del-fg)">赤</span> は消された行です。</p>
+
+    <p class="takeaway"><small>覚えておくこと</small>コミット ＝ メモ付きのセーブ。いつでも前のセーブに戻れるので、安心して書き直せる。</p>
+  </div>
+</section>
+
+<!-- ================= 第2章 ================= -->
+<section class="chapter wrap" id="cloud" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 2</span>
+    <h2>GitとGitHubは、別のもの</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>Gitは<b>セーブ機能</b>、GitHubは<b>セーブデータを預ける倉庫</b>。<br>ゲームでいえば、<mark>本体のセーブ</mark>と<mark>クラウドセーブ</mark>の関係です。</p>
+
+    <div class="compare">
+      <div class="panel">
+        <h3>Git（ギット）</h3>
+        <p class="compare-sub">ゲーム本体のセーブ機能</p>
+        <ul>
+          <li>自分のパソコンの中で動く道具</li>
+          <li>ファイルの変更をセーブ（コミット）する</li>
+          <li>インターネットがなくても使える</li>
+          <li>無料の道具</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>GitHub（ギットハブ）</h3>
+        <p class="compare-sub">クラウドセーブ ＋ みんなの集会所</p>
+        <ul>
+          <li>インターネット上のサービス（Webサイト）</li>
+          <li>Gitのセーブデータを預けておける</li>
+          <li>パソコンが壊れても、データが残る</li>
+          <li>仲間と同じデータを共有して、一緒に作れる</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prose">
+      <h3>「リポジトリ」は、プロジェクトの箱</h3>
+      <p>GitHubでは、1つのアプリ（プロジェクト）ごとに<b>「リポジトリ」</b>という箱を作ります。リポジトリには、<b>ファイル</b>と<b>セーブの記録</b>がまとめて入っています。このサイトも <code>document</code> という名前のリポジトリに入っています。</p>
+      <p>GitHubと似たサービスに GitLab などもありますが、いちばん多くの人が使っているのがGitHubです。</p>
+    </div>
+
+    <p class="takeaway"><small>覚えておくこと</small>Git ＝ 手元のセーブ機能。GitHub ＝ セーブを預けて共有する倉庫。リポジトリ ＝ プロジェクトごとの箱。</p>
+  </div>
+</section>
+
+<!-- ================= 第3章 ================= -->
+<section class="chapter wrap" id="sync" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 3</span>
+    <h2>GitHubに送る・受け取る</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>自分のセーブをGitHubに送るのが<b>「プッシュ」</b>、GitHubから最新のセーブを受け取るのが<b>「プル」</b>です。</p>
+
+    <div class="prose">
+      <p>あなたと友達の2人で、同じアプリを作っているとします。2人のパソコンと、真ん中にGitHub。ボタンを押して、セーブ（丸いしるし）がどう移動するか見てください。</p>
+    </div>
+
+    <div class="panel">
+      <div class="sync">
+        <div class="machine" id="mYou">
+          <h4>あなたのパソコン<small>Gitが入っている</small></h4>
+          <div class="dots" id="dYou"></div>
+          <div class="btn-row">
+            <button class="btn ghost" type="button" data-act="you-commit">セーブする</button>
+            <button class="btn" type="button" data-act="you-push">プッシュ ↑</button>
+            <button class="btn ghost" type="button" data-act="you-pull">プル ↓</button>
+          </div>
+        </div>
+        <div class="machine cloud" id="mHub">
+          <h4>GitHub<small>インターネット上の倉庫</small></h4>
+          <div class="dots" id="dHub"></div>
+        </div>
+        <div class="machine" id="mFriend">
+          <h4>友達のパソコン<small>Gitが入っている</small></h4>
+          <div class="dots" id="dFriend"></div>
+          <div class="btn-row">
+            <button class="btn ghost" type="button" data-act="fr-commit">セーブする</button>
+            <button class="btn" type="button" data-act="fr-push">プッシュ ↑</button>
+            <button class="btn ghost" type="button" data-act="fr-pull">プル ↓</button>
+          </div>
+        </div>
+      </div>
+      <p class="sync-msg" id="syncMsg" aria-live="polite"></p>
+      <div class="btn-row" style="margin-top:0.75rem"><button class="btn ghost" type="button" id="syncReset">最初から</button></div>
+    </div>
+
+    <div class="prose">
+      <p>試してみるとわかるとおり、<b>GitHubに新しいセーブがあるときは、先にプルしないとプッシュできません</b>。これは「友達の変更を知らないまま上書きして、消してしまう」事故を防ぐためのルールです。第0章の「困りごと3」の答えです。</p>
+    </div>
+
+    <p class="takeaway"><small>覚えておくこと</small>セーブ（コミット）→ プッシュで送る → 仲間はプルで受け取る。</p>
+  </div>
+</section>
+
+<!-- ================= 第4章 ================= -->
+<section class="chapter wrap" id="branch" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 4</span>
+    <h2>ブランチとプルリクエスト</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small><b>ブランチ</b>は、本番をコピーして作る<mark>「下書き用の世界線」</mark>。<br><b>プルリクエスト</b>は、<mark>「この下書きを本番に入れていいですか？」</mark>というお願いです。</p>
+
+    <div class="prose">
+      <p>みんなが使っているアプリを直接書き換えて、もし壊れたら大変です。そこで、本番（<b>main</b>と呼ばれることが多い）はそのままにして、別の世界線（ブランチ）で作業します。うまくいったら、仲間にチェックしてもらってから本番に合体（<b>マージ</b>）させます。</p>
+      <p>「次へ」で、1ステップずつ見てみましょう。</p>
+    </div>
+
+    <div class="panel">
+      <div class="branch-board" id="branchBoard">
+        <div class="lane"><span class="lane-name">本番（main）</span><div class="lane-track" id="laneMain"></div></div>
+        <div class="lane draft"><span class="lane-name">下書き（ブランチ）</span><div class="lane-track" id="laneDraft"></div></div>
+      </div>
+      <div id="prArea"></div>
+      <div class="flow-detail" style="margin-top:1rem">
+        <div class="step-text">
+          <span class="step-count" id="brCount"></span>
+          <h3 id="brTitle"></h3>
+          <p id="brBody"></p>
+          <div class="btn-row" style="margin-top:0.5rem">
+            <button class="btn ghost" type="button" id="brPrev">戻る</button>
+            <button class="btn" type="button" id="brNext">次へ</button>
+          </div>
+        </div>
+        <div class="carry">
+          <span class="carry-label">たとえるなら</span>
+          <div class="carry-text" id="brAnalogy"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="takeaway"><small>覚えておくこと</small>ブランチで作る → プルリクエストでチェックしてもらう → マージで本番に合体。本番はいつも安全。</p>
+  </div>
+</section>
+
+<!-- ================= 第5章 ================= -->
+<section class="chapter wrap" id="real" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 5</span>
+    <h2>実例：このサイトもGitHubで作られている</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>このシリーズのファイルも、<mark>GitHubのリポジトリ <code>gmtmg/document</code></mark> にセーブされています。</p>
+
+    <div class="duo">
+      <div class="prose">
+        <p>このサイトは、ClaudeというAIが作りました。そのときの流れは、このページで学んだことそのままです。</p>
+        <ol class="three">
+          <li><b>ブランチを作る</b>：<code>claude/ai-beginner-learning-site-…</code> という名前の下書きの世界線を作った</li>
+          <li><b>コミットする</b>：ファイルを書いて、メモ付きでセーブした</li>
+          <li><b>プッシュする</b>：GitHubに送った</li>
+        </ol>
+        <p>実は最初、プッシュは<b>「権限がありません」と断られました</b>。GitHubは「このリポジトリに書き込んでいいのは誰か」をきちんと管理しているからです。持ち主が許可を出してから、プッシュできました。</p>
+      </div>
+      <div>
+        <div class="panel-title">実際のセーブの記録（一部）</div>
+        <ol class="commit-log">
+          <li><code>4e08209</code><span>Add AI app learning site for beginners<br><span class="muted">AIアプリの学習サイトを追加</span></span></li>
+          <li><code>10aeeb2</code><span>Make the learning site easier for beginners<br><span class="muted">初心者向けにもっとやさしく</span></span></li>
+          <li><code>最新</code><span>Add series top page and GitHub / online lessons<br><span class="muted">トップページと、このページを追加</span></span></li>
+        </ol>
+        <p class="layers-caption">左の英数字はセーブごとに付く番号（ID）です。メモは英語で書く習慣の人が多いです。</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <h3>GitHubでできること、まとめ</h3>
+      <ul class="three">
+        <li><b>セーブを預ける</b>：パソコンが壊れても安心</li>
+        <li><b>みんなで作る</b>：プッシュ・プル・プルリクエストで共同作業</li>
+        <li><b>サイトを公開する</b>：「GitHub Pages」という機能で、リポジトリのファイルをそのままWebサイトとして公開できる</li>
+        <li><b>他の人のコードを見る</b>：世界中の人が公開しているコードを読んだり、使ったりできる</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 用語とクイズ ================= -->
+<section class="chapter wrap" id="quiz" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 6</span>
+    <h2>用語のおさらいと確認クイズ</h2>
+  </div>
+  <div class="stack">
+    <div class="table-wrap">
+      <table class="words">
+        <thead><tr><th>言葉</th><th>ひとことで</th><th>ゲームでいうと</th></tr></thead>
+        <tbody>
+          <tr><td>Git</td><td>ファイルの変更をセーブする道具</td><td>セーブ機能</td></tr>
+          <tr><td>GitHub</td><td>セーブを預けて共有するWebサービス</td><td>クラウドセーブ</td></tr>
+          <tr><td>リポジトリ</td><td>プロジェクトのファイルとセーブ記録の箱</td><td>セーブデータ1つ分</td></tr>
+          <tr><td>コミット</td><td>メモ付きでセーブすること</td><td>セーブする</td></tr>
+          <tr><td>プッシュ</td><td>セーブをGitHubに送る</td><td>クラウドにアップロード</td></tr>
+          <tr><td>プル</td><td>GitHubから最新を受け取る</td><td>クラウドからダウンロード</td></tr>
+          <tr><td>ブランチ</td><td>本番とは別の、下書き用の世界線</td><td>別のセーブ枠で試す</td></tr>
+          <tr><td>プルリクエスト</td><td>「本番に入れていい？」のお願い</td><td>—</td></tr>
+          <tr><td>マージ</td><td>ブランチを本番に合体させる</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel quiz" id="quizBox"></div>
+    <p class="quiz-score" id="quizScore"></p>
+  </div>
+</section>
+
+</main>
+
+<section class="wrap" style="padding-block: 1rem 3rem;">
+  <p class="cast-title">次のレッスン</p>
+  <div class="nextup">
+    <a href="online.html"><small>LESSON</small><b>オンライン通信に対応しているアプリ</b><span class="muted">離れた人とつながるしくみ</span></a>
+    <a href="ai-app.html"><small>LESSON</small><b>AIアプリのしくみ</b><span class="muted">AIを借りてアプリを作る</span></a>
+    <a href="index.html"><small>TOP</small><b>アプリ作るための基本とか</b><span class="muted">トップページに戻る</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>このページのセーブやプッシュは、仕組みを見せるためのシミュレーションです。本物のGitHubには何も送られません。</p>
+  </div>
+</footer>
+
+<script src="assets/common.js"></script>
+<script src="assets/github.js"></script>
+</body>
+</html>

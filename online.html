@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>オンライン通信に対応しているアプリ</title>
+<meta name="description" content="LINEやゲームは、どうやって離れた人とつながる？オンラインとオフラインの違い、リクエストとレスポンス、データの置き場所を触って学べます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Dela+Gothic+One&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="page-net">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="long">アプリ作るための基本とか</span><span class="short">トップ</span></a>
+    <nav class="chapnav" aria-label="章の移動">
+      <a href="#zero">0 そもそも</a>
+      <a href="#request">1 お願いと返事</a>
+      <a href="#data">2 データの場所</a>
+      <a href="#realtime">3 すぐ届く</a>
+      <a href="#care">4 気をつけること</a>
+      <a href="#parts">5 まとめ</a>
+      <a href="#quiz">6 クイズ</a>
+    </nav>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="top">
+
+<section class="hero wrap">
+  <div style="max-width: 46rem">
+    <nav class="crumb" aria-label="現在地"><a href="index.html">アプリ作るための基本とか</a><span>›</span><span>オンライン通信に対応しているアプリ</span></nav>
+    <h1><span class="small">LINEも、天気も、オンラインゲームも</span>オンライン通信に<br>対応しているアプリ</h1>
+    <p class="lead">離れた人とメッセージを送り合ったり、一緒にゲームをしたり。アプリが<mark>インターネットを通じて、ほかのコンピューターとやり取りする</mark>しくみを見ていきます。</p>
+    <div class="hero-goal">
+      <b>先に答えを3行で</b>
+      <ol class="three">
+        <li>オンラインアプリは、インターネットの向こうの<b>サーバー</b>とやり取りしている。</li>
+        <li>やり取りは「ください（リクエスト）」と「どうぞ（レスポンス）」の手紙。</li>
+        <li>大事なデータは、スマホではなく<b>サーバー</b>にしまってある。</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 第0章 ================= -->
+<section class="chapter wrap chapter-zero" id="zero" data-chapter>
+  <div class="chapter-head">
+    <span class="zero-badge">Chapter 0 ／ そもそもの前提</span>
+    <h2>「オンライン」ってどういうこと？</h2>
+    <p class="lead">「アプリ」「サーバー」という言葉がはじめての人は、先に<a href="index.html#basics">トップページの「そもそもの前提」</a>をどうぞ。</p>
+  </div>
+
+  <div class="stack">
+    <div class="prose">
+      <p><b>オンライン</b>は「インターネットにつながっている状態」、<b>オフライン</b>は「つながっていない状態」のことです。</p>
+      <p>スマホのアプリには、<b>スマホの中だけで完結するアプリ</b>と、<b>インターネットの向こうと、やり取りしないと動かないアプリ</b>があります。機内モードにすると、その違いがはっきりわかります。</p>
+    </div>
+
+    <div class="panel airplane" id="airplane">
+      <label class="switch"><input type="checkbox" id="planeMode"> 機内モード（インターネットを切る）</label>
+      <div class="app-grid" id="appGrid"></div>
+      <p class="memory-note" id="planeNote" aria-live="polite"></p>
+    </div>
+
+    <div class="duo">
+      <div class="panel">
+        <h3 style="font-size:1.1rem">オフラインでも動くアプリ</h3>
+        <p>電卓・カメラ・アラームなど。必要な手順書とデータが、<b>全部スマホの中</b>にあります。</p>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:1.1rem">オンラインでないと動かないアプリ</h3>
+        <p>LINE・天気・オンラインゲームなど。<b>ほかの人やサーバーの持っている情報</b>が必要なので、インターネットでやり取りします。</p>
+      </div>
+    </div>
+
+    <p class="oneword"><small>ひとことで言うと</small>「オンライン通信に対応しているアプリ」とは、<mark>スマホの外にあるコンピューター（サーバー）とやり取りしながら動くアプリ</mark>のことです。</p>
+  </div>
+</section>
+
+<!-- ================= 第1章 ================= -->
+<section class="chapter wrap" id="request" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 1</span>
+    <h2>通信は「ください」と「どうぞ」の手紙</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>スマホがサーバーに出す「ください」の手紙が<b>リクエスト</b>、サーバーからの「どうぞ」の返事が<b>レスポンス</b>です。</p>
+
+    <div class="prose">
+      <p>お願いする側（あなたのスマホ）を<b>クライアント</b>、お願いに応える側を<b>サーバー</b>と呼びます。手紙の宛先は<b>URL</b>（<code>https://〜</code> で始まる住所）です。</p>
+      <p>やりたいことを選んで「手紙を出す」を押してください。どんな手紙が行き来しているか見られます。</p>
+    </div>
+
+    <div class="panel">
+      <div class="btn-row">
+        <div class="req-picks" id="reqPicks" role="group" aria-label="やりたいこと">
+          <button type="button" data-i="0" aria-pressed="true">天気を見る</button>
+          <button type="button" data-i="1" aria-pressed="false">友達の投稿を見る</button>
+          <button type="button" data-i="2" aria-pressed="false">商品を買う</button>
+        </div>
+        <button class="btn" type="button" id="reqSend">手紙を出す</button>
+      </div>
+      <div class="wire">
+        <div class="end" id="endClient"><b>あなたのスマホ</b><small>クライアント</small></div>
+        <div class="wire-track" aria-hidden="true"><span class="letter" id="letter" hidden>リクエスト</span></div>
+        <div class="end" id="endServer"><b id="serverName">天気の会社</b><small>サーバー</small></div>
+      </div>
+      <div class="letters">
+        <div class="letter-card dim" id="reqCard"><span class="tag">① リクエスト（ください）</span><pre id="reqText"></pre></div>
+        <div class="letter-card dim" id="resCard"><span class="tag">② レスポンス（どうぞ）</span><pre id="resText"></pre></div>
+      </div>
+      <p class="layers-caption" id="reqNote" style="margin-top:0.8rem">手紙の書き方は、わかりやすく簡単にしています。</p>
+    </div>
+
+    <p class="takeaway"><small>覚えておくこと</small>クライアントがリクエストを出し、サーバーがレスポンスを返す。オンラインアプリは、これを何度もくり返している。</p>
+  </div>
+</section>
+
+<!-- ================= 第2章 ================= -->
+<section class="chapter wrap" id="data" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 2</span>
+    <h2>データは、どこにしまってある？</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>メッセージなどの大事なデータは、<mark>スマホではなく、サーバーのデータベース</mark>にしまってあります。<br>スマホは、それを見せてもらっているだけです。</p>
+
+    <div class="prose">
+      <p><b>データベース</b>は、サーバーの中にあるデータの棚です。LINEで送ったメッセージは、相手のスマホに直接飛んでいくのではなく、<b>一度サーバーのデータベースにしまわれて</b>、そこから相手に届きます。</p>
+      <p>下で試してみてください。電波を切ったり、機種変更したりすると、何が起きるでしょう？</p>
+    </div>
+
+    <div class="panel">
+      <div class="chat3">
+        <div class="mini-phone">
+          <h4>あなたのスマホ <span class="signal" id="sigYou">電波あり</span></h4>
+          <div class="msgs" id="msgsYou"></div>
+          <div class="phone-controls">
+            <button class="btn" type="button" id="sendYou">「おはよう」を送る</button>
+            <button class="btn ghost" type="button" id="toggleSig">電波を切る</button>
+            <button class="btn ghost" type="button" id="newPhone">機種変更する</button>
+          </div>
+        </div>
+        <div class="server-box">
+          <h4>サーバー <small class="muted">データベース</small></h4>
+          <div class="msgs" id="dbRows"></div>
+        </div>
+        <div class="mini-phone">
+          <h4>友達のスマホ <span class="signal">電波あり</span></h4>
+          <div class="msgs" id="msgsFriend"></div>
+          <div class="phone-controls">
+            <button class="btn" type="button" id="sendFriend">「やっほー」と返す</button>
+          </div>
+        </div>
+      </div>
+      <p class="memory-note chat-note" id="chatNote" aria-live="polite"></p>
+    </div>
+
+    <p class="takeaway"><small>覚えておくこと</small>大事なデータはサーバーにある。だから機種変更しても戻ってくるし、電波がないときは「送信待ち」になる。</p>
+  </div>
+</section>
+
+<!-- ================= 第3章 ================= -->
+<section class="chapter wrap" id="realtime" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 3</span>
+    <h2>メッセージが「すぐ届く」しくみ</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>ふつうの通信は<b>「聞きに行かないと、何も来ない」</b>。チャットやゲームは<mark>つなぎっぱなしにして、新しいことがあったらすぐ教えてもらう</mark>しくみ（リアルタイム通信）を使います。</p>
+
+    <div class="prose">
+      <p>第1章のとおり、通信はクライアントの「ください」から始まります。サーバーから勝手に手紙を送ることは、ふつうはできません。では、友達のメッセージにどうやって気づくのでしょう？ 2つのやり方を比べてみます。</p>
+    </div>
+
+    <div class="panel">
+      <div class="btn-row" style="margin-bottom:1rem">
+        <span class="try-label">押してみよう</span>
+        <button class="btn" type="button" id="rtSend">友達がメッセージを送る</button>
+        <button class="btn ghost" type="button" id="rtReset">リセット</button>
+      </div>
+      <div class="lanes2">
+        <div class="rt-lane">
+          <h4>やり方A：何度も聞きに行く</h4>
+          <p>3秒ごとに「新しいメッセージある？」とリクエストを出す。手紙を何度も出すイメージ。</p>
+          <div class="rt-stats"><span>次に聞きに行くまで <b id="pollCount">3</b> 秒</span><span>聞きに行った回数 <b id="pollAsks">0</b></span></div>
+          <div class="rt-wait" id="pollWait"></div>
+          <div class="rt-inbox" id="pollInbox"></div>
+        </div>
+        <div class="rt-lane">
+          <h4>やり方B：つなぎっぱなしにする</h4>
+          <p>最初に一度だけつなぎ、あとはサーバーが「来たよ」とすぐ知らせる。電話をつないだままのイメージ。</p>
+          <div class="rt-stats"><span>つなぎっぱなし <b>●</b></span><span>聞きに行った回数 <b>1</b></span></div>
+          <div class="rt-wait" id="liveWait"></div>
+          <div class="rt-inbox" id="liveInbox"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>やり方Aは作るのが簡単ですが、届くまでに待ち時間があり、何もないときも聞きに行くのでムダが多くなります。チャットや対戦ゲームのように「すぐ」が大事なアプリは、やり方B（<b>WebSocket</b>などと呼ばれます）を使います。</p>
+    </div>
+
+    <p class="takeaway"><small>覚えておくこと</small>「すぐ届く」が大事なアプリは、つなぎっぱなしのリアルタイム通信を使う。</p>
+  </div>
+</section>
+
+<!-- ================= 第4章 ================= -->
+<section class="chapter wrap" id="care" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 4</span>
+    <h2>オンラインアプリを作るときに気をつけること</h2>
+  </div>
+
+  <div class="stack">
+    <p class="oneword"><small>ひとことで言うと</small>インターネットは<mark>いつもつながっているとは限らないし、誰が見ているかわからない</mark>。その前提で作ります。</p>
+    <div class="care">
+      <div class="reason">
+        <b>つながらないときのこと</b>
+        <p>地下や電車の中では通信が切れます。第2章のように「送信待ち」にして、つながったら送り直すなどの工夫をします。「読み込み中…」の表示もそのひとつです。</p>
+      </div>
+      <div class="reason">
+        <b>安全に送ること（HTTPS）</b>
+        <p>手紙を裸のまま送ると、途中で盗み見されるかもしれません。URLが <code>https</code> で始まるのは、<b>封筒に入れて鍵をかけた手紙</b>で送っているしるしです。</p>
+      </div>
+      <div class="reason">
+        <b>本人かどうか（ログイン）</b>
+        <p>サーバーには、たくさんの人のデータがあります。「この人は本当に本人？」を確かめるために、ログイン（IDとパスワードなど）が必要になります。</p>
+      </div>
+    </div>
+    <p class="takeaway"><small>覚えておくこと</small>切れても困らないように・盗み見されないように・本人だけが使えるように作る。</p>
+  </div>
+</section>
+
+<!-- ================= 第5章 ================= -->
+<section class="chapter wrap" id="parts" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 5</span>
+    <h2>まとめ：オンラインアプリの4つの部品</h2>
+  </div>
+
+  <div class="stack">
+    <div class="parts4">
+      <div class="part4"><span class="part4-no">1</span><b>画面（クライアント）</b><p>スマホやブラウザで動く、見える部分。リクエストを出す。</p><em>あなたのスマホ</em></div>
+      <div class="part4 ai"><span class="part4-no">2</span><b>通信</b><p>リクエストとレスポンスの手紙。すぐ届けたいときはつなぎっぱなし。</p><em>インターネット</em></div>
+      <div class="part4"><span class="part4-no">3</span><b>サーバー</b><p>リクエストを受けて、計算したり、データを出し入れしたりする裏方。</p><em>どこかの会社</em></div>
+      <div class="part4"><span class="part4-no">4</span><b>データベース</b><p>メッセージや在庫など、大事なデータをしまう棚。</p><em>サーバーの中</em></div>
+    </div>
+    <div class="prose">
+      <h3>AIアプリも、オンラインアプリの仲間</h3>
+      <p><a href="ai-app.html">AIアプリのレッスン</a>で出てきた「APIでAIに注文票を送る」のも、じつはこのページの通信そのものです。あなたのサーバーが<b>クライアント</b>になって、AIの会社の<b>サーバー</b>にリクエストを出し、答えをレスポンスで受け取っています。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= クイズ ================= -->
+<section class="chapter wrap" id="quiz" data-chapter>
+  <div class="chapter-head">
+    <span class="chapno">Chapter 6</span>
+    <h2>確認クイズ</h2>
+  </div>
+  <div class="panel quiz" id="quizBox"></div>
+  <p class="quiz-score" id="quizScore" style="margin-top:1rem"></p>
+</section>
+
+</main>
+
+<section class="wrap" style="padding-block: 1rem 3rem;">
+  <p class="cast-title">次のレッスン</p>
+  <div class="nextup">
+    <a href="ai-app.html"><small>LESSON</small><b>AIアプリのしくみ</b><span class="muted">AIを借りてアプリを作る</span></a>
+    <a href="github.html"><small>LESSON</small><b>GitHubってなに？</b><span class="muted">アプリ作りのセーブ機能と、みんなの倉庫</span></a>
+    <a href="index.html"><small>TOP</small><b>アプリ作るための基本とか</b><span class="muted">トップページに戻る</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>このページの通信は、仕組みを見せるためのシミュレーションです。実際にはどこにも送られません。</p>
+  </div>
+</footer>
+
+<script src="assets/common.js"></script>
+<script src="assets/online.js"></script>
+</body>
+</html>

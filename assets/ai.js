@@ -3,51 +3,25 @@
 
   const R = window.RECORDED;
   const EX = window.EXAMPLES;
-  const $ = (sel, root = document) => root.querySelector(sel);
-  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const wait = (ms) => new Promise((r) => setTimeout(r, reduceMotion ? 0 : ms));
+  const { $, $$, esc, reduceMotion, wait } = window.Site;
 
-  const store = {
-    get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } },
-    set(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch { /* 保存できなくても動く */ } },
-  };
-
-  /* ---------- 進捗バー・章ナビ ---------- */
-  const progress = $("#progress");
-  const navLinks = $$(".chapnav a");
-  const chapters = $$("[data-chapter]");
-  const seen = new Set(store.get("seenChapters") || []);
-
-  function markRoadmap() {
-    $$("#roadmap li").forEach((li) => li.classList.toggle("done", seen.has(li.dataset.ch)));
+  /* ---------- 第0章: そもそも ---------- */
+  const CONT = [
+    ["むかしむかし、あるところに", "おじいさんとおばあさんが住んでいました。"],
+    ["Q. 日本の首都は？ A.", "東京です。"],
+    ["「明日遅れます」を丁寧に言うと", "「明日は遅れて参加いたします」となります。"],
+  ];
+  function showCont(i) {
+    $("#contOut").innerHTML = `${esc(CONT[i][0])}<mark>${esc(CONT[i][1])}</mark>`;
   }
-  markRoadmap();
-
-  function onScroll() {
-    const h = document.documentElement;
-    const ratio = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight);
-    progress.style.width = (ratio * 100).toFixed(1) + "%";
-
-    let current = null;
-    for (const ch of chapters) {
-      const rect = ch.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.4) current = ch.id;
-      if (rect.bottom < window.innerHeight * 0.6 && !seen.has(ch.id)) {
-        seen.add(ch.id);
-        store.set("seenChapters", [...seen]);
-        markRoadmap();
-      }
-    }
-    navLinks.forEach((a) => {
-      const on = a.getAttribute("href") === "#" + current;
-      if (on && !a.classList.contains("is-active")) a.scrollIntoView({ block: "nearest", inline: "center" });
-      a.classList.toggle("is-active", on);
-    });
-  }
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  Site.segmented($("#contPicks"), (b) => showCont(Number(b.dataset.i)));
+  showCont(0);
+  $("#addMine").addEventListener("click", (e) => {
+    if ($("#borrowApps .yours")) return;
+    $("#borrowApps").insertAdjacentHTML("beforeend", '<div class="app-chip yours"><b>あなたのアプリ</b><small>同じAI本体を借りて使える。このページのゴール！</small></div>');
+    e.currentTarget.disabled = true;
+    e.currentTarget.textContent = "借りられました";
+  });
 
   /* ---------- HERO: 吹き出しを裏返す ---------- */
   const flip = $("#heroFlip");
@@ -599,37 +573,10 @@ Authorization: Bearer sk-xxxxxxxxxxxx
       why: "仕組みは同じまま。アプリの性格は、ほとんど指示書で決まります（第6章・第7章）。",
     },
   ];
-  const quizState = QUIZ.map(() => null);
-  function quizRender() {
-    $("#quizBox").innerHTML = QUIZ.map((item, qi) => {
-      const answered = quizState[qi] !== null;
-      return `<div class="q">
-        <p class="q-title"><span>Q${qi + 1}</span>${item.q}</p>
-        <div class="q-opts">${item.opts.map((o, oi) => {
-          let cls = "";
-          if (answered && oi === item.a) cls = "correct";
-          else if (answered && oi === quizState[qi]) cls = "wrong";
-          return `<button type="button" data-q="${qi}" data-o="${oi}" class="${cls}"${answered ? " disabled" : ""}>${o}</button>`;
-        }).join("")}</div>
-        ${answered ? `<p class="q-explain">${quizState[qi] === item.a ? "正解！" : "おしい！"} ${item.why}</p>` : ""}
-      </div>`;
-    }).join("");
-    const done = quizState.filter((x) => x !== null).length;
-    const score = quizState.filter((x, i) => x === QUIZ[i].a).length;
-    $("#quizScore").innerHTML = done === QUIZ.length
-      ? `${score} / ${QUIZ.length} 問正解${score === QUIZ.length ? "　もうAIアプリの仕組みを説明できます。" : "　解説の章を読み返してみましょう。"} <button class="btn ghost" type="button" id="quizReset" style="font-family:var(--f-body);font-size:0.9rem">もう一度</button>`
-      : "";
-  }
-  document.addEventListener("click", (e) => {
-    const b = e.target.closest("#quizBox button");
-    if (b) {
-      quizState[Number(b.dataset.q)] = Number(b.dataset.o);
-      quizRender();
-    }
-    if (e.target.closest("#quizReset")) {
-      quizState.fill(null);
-      quizRender();
-    }
+  Site.quiz({
+    items: QUIZ,
+    box: $("#quizBox"),
+    score: $("#quizScore"),
+    perfect: "もうAIアプリの仕組みを説明できます。",
   });
-  quizRender();
 })();
