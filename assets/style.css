@@ -853,7 +853,7 @@ body.page-net { --accent: var(--c-net); }
 .lesson { display: flex; flex-direction: column; }
 .lesson .go { margin-top: auto; padding-top: 0.4rem; }
 
-/* ================= チャシー（chat.html） ================= */
+/* ================= チャシー（どのページでも右下にいる） ================= */
 :root {
   --c-chat: #d63d7a;
   --cy-body: #ffd1e0;
@@ -891,20 +891,11 @@ body.page-chat { --accent: var(--c-chat); }
 
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-.chat-wrap { max-width: 50rem; padding-block: 2rem 11rem; display: grid; gap: 1.5rem; }
-.chat-hero { display: grid; grid-template-columns: auto 1fr; gap: 1.2rem; align-items: start; }
-.chat-hero > * { min-width: 0; }
-.chacy-big { width: 6rem; height: 6rem; animation: float 3.2s ease-in-out infinite; }
-@keyframes float { 50% { transform: translateY(-5px) rotate(-2deg); } }
-.chat-hero h1 { font-family: var(--f-display); font-weight: 400; font-size: var(--step-3); }
-.chat-hero p { color: var(--ink-soft); margin-top: 0.4rem; }
-.chat-how { margin-top: 0.9rem; }
 
-.chat-log { display: grid; gap: 1.1rem; }
 .turn { display: grid; gap: 0.6rem; min-width: 0; }
-.turn.chacy { grid-template-columns: 2.6rem minmax(0, 1fr); align-items: start; }
+.turn.chacy { grid-template-columns: 2.2rem minmax(0, 1fr); align-items: start; }
 .turn.me { justify-items: end; }
-.avatar { width: 2.6rem; height: 2.6rem; }
+.avatar { width: 2.2rem; height: 2.2rem; }
 .turn.thinking .avatar { animation: hop 0.8s ease-in-out infinite; }
 @keyframes hop { 50% { transform: translateY(-4px); } }
 .bubble-u {
@@ -937,45 +928,21 @@ body.page-chat { --accent: var(--c-chat); }
 .diagram-note { font-size: 0.85rem; color: var(--ink-soft); text-align: left; }
 .diagram pre { text-align: left; margin-top: 0.5rem; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-left: 3.2rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-left: 2.8rem; }
 .chips button {
   border: 1.5px solid var(--accent); color: var(--accent); background: var(--sheet); border-radius: 999px;
   padding: 0.35rem 0.9rem; cursor: pointer; font-size: 0.9rem; line-height: 1.5; text-align: left;
 }
 .chips button:hover { background: var(--accent); color: #fff; }
 
-.composer {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 15;
-  background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px);
-  border-top: 1px solid var(--line);
-  padding: 0.7rem 16px calc(0.6rem + env(safe-area-inset-bottom, 0px));
-}
-.composer-inner { max-width: 50rem; margin: 0 auto; display: flex; gap: 0.6rem; align-items: flex-end; }
-.composer textarea {
-  flex: 1; min-width: 0; resize: none; font: inherit; line-height: 1.6; padding: 0.6rem 0.9rem;
-  border-radius: 20px; border: 2px solid var(--line); background: var(--sheet); color: var(--ink); max-height: 200px;
-}
-.composer textarea:focus { outline: none; border-color: var(--accent); }
-.btn.send { background: var(--accent); border-color: var(--accent); color: #fff; padding: 0.55rem 1.3rem; }
+.btn.send { background: var(--accent); border-color: var(--accent); color: #fff; padding: 0.5rem 1.1rem; }
 .btn.send.stop { background: var(--sheet); color: var(--ink); border-color: var(--ink); }
-.composer-foot { max-width: 50rem; margin: 0.35rem auto 0; display: flex; justify-content: space-between; gap: 1rem; font-size: 0.75rem; color: var(--ink-soft); flex-wrap: wrap; }
 .linkish { background: none; border: 0; padding: 0; color: var(--ink-soft); text-decoration: underline; cursor: pointer; font-size: 0.75rem; }
 .linkish.confirm { color: var(--ng); font-weight: 700; }
 
-/* トップページのチャシー案内 */
-.chacy-banner { display: grid; grid-template-columns: auto 1fr auto; gap: 1.2rem; align-items: center; background: var(--sheet); border: 2px solid var(--c-chat); border-radius: var(--radius); padding: 1.1rem 1.3rem; text-decoration: none; color: var(--ink); margin-top: 1rem; }
-.chacy-banner > * { min-width: 0; }
-.chacy-banner svg { width: 4rem; height: 4rem; }
-.chacy-banner b { font-size: 1.15rem; }
-.chacy-banner p { font-size: 0.92rem; color: var(--ink-soft); }
-.chacy-banner .go { color: var(--c-chat); font-weight: 700; white-space: nowrap; }
 
 @media (max-width: 560px) {
-  .chat-hero { grid-template-columns: 1fr; }
-  .chacy-big { width: 4.5rem; height: 4.5rem; }
   .chips { padding-left: 0; }
-  .chacy-banner { grid-template-columns: auto 1fr; }
-  .chacy-banner .go { grid-column: 1 / -1; }
 }
 
 /* チャシー：APIキーの入力 */
@@ -989,7 +956,6 @@ body.page-chat { --accent: var(--c-chat); }
 .key-msg:empty { display: none; }
 .key-msg.bad { color: var(--ng); font-weight: 700; }
 .key-notes { margin: 0; padding-left: 1.2rem; font-size: 0.82rem; color: var(--ink-soft); display: grid; gap: 0.15rem; }
-.foot-actions { display: inline-flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
 
 /* チャシー：図を大きく見る */
 .diagram.ok { position: relative; cursor: zoom-in; padding-bottom: 2rem; }
@@ -1014,3 +980,74 @@ body.page-chat { --accent: var(--c-chat); }
 }
 .lb-bar .lb-close { background: var(--accent); border-color: var(--accent); color: #fff; }
 .lb-hint { text-align: center; font-size: 0.78rem; color: var(--ink-soft); padding: 0 16px 0.6rem; }
+
+/* チャシー：右下のボタンと、質問パネル */
+.chacy { --accent: var(--c-chat); font-size: 0.95rem; }
+.cy-fab {
+  position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 39;
+  display: flex; align-items: center; gap: 0.4rem; padding: 0; border: 0; background: none; cursor: pointer;
+}
+.cy-fab svg {
+  width: 4.2rem; height: 4.2rem; border-radius: 50%; background: var(--sheet); padding: 0.35rem;
+  box-shadow: 0 10px 26px -10px rgba(0,0,0,.45), 0 0 0 3px var(--c-chat); animation: cy-float 3.2s ease-in-out infinite;
+  order: 2;
+}
+.cy-fab:hover svg { transform: translateY(-2px); }
+.cy-fab-label {
+  background: var(--sheet); color: var(--ink); border: 2px solid var(--c-chat); border-radius: 999px 999px 4px 999px;
+  padding: 0.3rem 0.8rem; font-size: 0.82rem; font-weight: 700; box-shadow: 0 8px 20px -14px rgba(0,0,0,.5); white-space: nowrap;
+}
+@keyframes cy-float { 50% { transform: translateY(-4px); } }
+.chacy.is-open .cy-fab { display: none; }
+.cy-panel {
+  position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40;
+  width: min(25rem, calc(100vw - 32px)); height: min(40rem, calc(100vh - 6rem));
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--paper); border: 2px solid var(--c-chat); border-radius: 18px;
+  box-shadow: 0 24px 60px -24px rgba(0,0,0,.55);
+}
+.cy-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.7rem; background: var(--sheet); border-bottom: 1px solid var(--line); }
+.cy-head-face { width: 2.4rem; height: 2.4rem; flex: none; }
+.cy-head-text { display: grid; min-width: 0; flex: 1; line-height: 1.35; }
+.cy-head-text b { font-size: 1rem; }
+.cy-where { font-size: 0.72rem; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cy-icon { border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 0.2rem 0.6rem; font: inherit; font-size: 0.75rem; cursor: pointer; white-space: nowrap; }
+.cy-icon.confirm { color: var(--ng); border-color: var(--ng); font-weight: 700; }
+.cy-close { font-size: 1.1rem; line-height: 1; padding: 0.25rem 0.55rem; }
+.cy-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0.9rem 0.8rem; display: grid; gap: 0.9rem; align-content: start; }
+.cy-log { display: grid; gap: 0.9rem; min-width: 0; }
+.cy-log .bubble-c { padding: 0.65rem 0.85rem; font-size: 0.92rem; line-height: 1.8; }
+.cy-log .bubble-u { font-size: 0.92rem; }
+.cy-log .chips button { font-size: 0.82rem; padding: 0.3rem 0.75rem; }
+.cy-key { padding: 0.9rem 1rem; gap: 0.55rem; }
+.cy-key h2 { font-size: 1rem; }
+.cy-key p, .cy-key .key-notes { font-size: 0.82rem; }
+.cy-key .btn { font-size: 0.85rem; padding: 0.4rem 0.9rem; }
+.cy-composer { display: flex; gap: 0.5rem; align-items: flex-end; padding: 0.6rem 0.7rem 0.3rem; background: var(--sheet); border-top: 1px solid var(--line); }
+.cy-composer textarea {
+  flex: 1; min-width: 0; resize: none; font: inherit; line-height: 1.55; padding: 0.5rem 0.8rem;
+  border-radius: 18px; border: 2px solid var(--line); background: var(--paper); color: var(--ink); max-height: 160px;
+}
+.cy-composer textarea:focus { outline: none; border-color: var(--accent); }
+.cy-foot .linkish { white-space: nowrap; }
+.cy-foot { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0 0.8rem 0.5rem; background: var(--sheet); font-size: 0.68rem; color: var(--ink-soft); line-height: 1.5; }
+.lightbox { z-index: 60; }
+@media (max-width: 560px) {
+  .cy-fab-label { display: none; }
+  .cy-fab svg { width: 3.6rem; height: 3.6rem; }
+  .cy-panel {
+    inset: 0; width: 100%; height: 100%; border: 0; border-radius: 0;
+    padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html:has(.chacy.is-open) { overflow: hidden; }
+}
+@media (prefers-reduced-motion: reduce) { .cy-fab svg { animation: none; } }
+
+/* トップページの「チャシーを開く」 */
+.chacy-call { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: center; background: var(--sheet); border: 2px solid var(--c-chat); border-radius: var(--radius); padding: 1rem 1.2rem; margin-top: 1rem; }
+.chacy-call > * { min-width: 0; }
+.chacy-call svg { width: 3.6rem; height: 3.6rem; }
+.chacy-call b { font-size: 1.05rem; }
+.chacy-call p { font-size: 0.9rem; color: var(--ink-soft); }
+.chacy-call .btn { background: var(--c-chat); border-color: var(--c-chat); color: #fff; white-space: nowrap; }
+@media (max-width: 560px) { .chacy-call { grid-template-columns: auto 1fr; } .chacy-call .btn { grid-column: 1 / -1; justify-content: center; } }

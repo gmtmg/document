@@ -1,6 +1,6 @@
 // チャシーの「お店の奥（サーバー）」。
-// 画面から届いた会話に指示書を足して、APIキーを付けて OpenAI に送り、返事をそのまま流して返す。
-import { SYSTEM_PROMPT } from "./system-prompt.js";
+// 画面から届いた会話に、指示書（いま読んでいるページの要約つき）を足して、APIキーを付けて OpenAI に送り、返事をそのまま流して返す。
+import { buildSystemPrompt } from "./system-prompt.js";
 
 const MAX_MESSAGES = 20;       // 覚えておく会話の数（直近20件）
 const MAX_USER_CHARS = 2000;   // 1回の質問の長さの上限
@@ -81,7 +81,7 @@ export default {
         stream: true,
         max_completion_tokens: 2000,
         reasoning_effort: "low",
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+        messages: [{ role: "system", content: buildSystemPrompt(body.page, body.section) }, ...messages],
       }),
     });
 

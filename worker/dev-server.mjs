@@ -1,6 +1,6 @@
 // 自分のパソコンでチャシーを試すためのサーバー。サイトのファイルと /chat を同じ場所で動かします。
 //   OPENAI_API_KEY=sk-... node worker/dev-server.mjs
-// そのあと http://localhost:8787/chat.html を開きます。
+// そのあと http://localhost:8787/ を開き、右下のチャシーを押します。
 import http from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
@@ -40,4 +40,4 @@ http.createServer(async (req, res) => {
   } catch {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("見つかりません");
   }
-}).listen(PORT, () => console.log(`http://localhost:${PORT}/chat.html を開いてください`));
+}).listen(PORT, () => console.log(`http://localhost:${PORT}/ を開いてください`));

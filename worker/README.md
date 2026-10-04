@@ -3,10 +3,10 @@
 > いまのチャシーは、使う人がAPIキーを画面に入力する **キー入力方式** で動いているので、このサーバーは使っていません。
 > たくさんの人に公開したくなったときに、この **サーバー方式** に切り替えます（`assets/chat-config.js` に、このサーバーのアドレスを書くと切り替わります）。
 
-チャシー（`chat.html`）の「お店の奥」です。画面から届いた会話に、チャシーの指示書（`src/system-prompt.js`）を足して、APIキーを付けて OpenAI に送ります。
+チャシー（各ページ右下の質問パネル）の「お店の奥」です。画面から届いた会話に、チャシーの指示書（`src/system-prompt.js`）と、いま読んでいるページの要約（`src/pages.js`）を足して、APIキーを付けて OpenAI に送ります。
 
 ```
-画面（GitHub Pages の chat.html）
+画面（GitHub Pages の各ページ）
    │  これまでの会話（直近20件）
    ▼
 チャシーのサーバー（Cloudflare Workers）  ← APIキーはここだけにある
@@ -61,7 +61,7 @@ window.CHACY_API_URL = "https://chacy.〇〇.workers.dev/chat";
 OPENAI_API_KEY=sk-... node worker/dev-server.mjs
 ```
 
-`http://localhost:8787/chat.html` を開くと、チャシーとお話しできます。
+`http://localhost:8787/` を開き、右下のチャシーを押すとお話しできます。
 
 ## テスト
 
@@ -69,6 +69,10 @@ OPENAI_API_KEY=sk-... node worker/dev-server.mjs
 node worker/test/run.mjs                      # 点検まわりのテスト（APIキー不要）
 OPENAI_API_KEY=sk-... node worker/test/run.mjs # 本物の OpenAI とのやり取りも確認
 ```
+
+## ページの内容を変えたとき
+
+チャシーは `src/pages.js` に書いた各ページの要約を見て答えます。ページの説明を変えたら、ここも合わせて直してください。
 
 ## チャシーの性格を変えたいとき
 

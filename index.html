@@ -11,21 +11,6 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="page-hub">
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="chacy" viewBox="0 0 64 64">
-    <path class="cy-antenna" d="M32 13 V6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-    <circle class="cy-ball" cx="32" cy="6" r="3.6"/>
-    <path class="cy-body" d="M32 12c14.4 0 25 9.6 25 23.5S47.3 59 32 59 7 49.4 7 35.5 17.6 12 32 12z"/>
-    <ellipse class="cy-belly" cx="32" cy="44" rx="13" ry="9"/>
-    <ellipse class="cy-eye" cx="23.5" cy="32" rx="3.2" ry="4.2"/>
-    <ellipse class="cy-eye" cx="40.5" cy="32" rx="3.2" ry="4.2"/>
-    <circle class="cy-shine" cx="24.6" cy="30.4" r="1.2"/>
-    <circle class="cy-shine" cx="41.6" cy="30.4" r="1.2"/>
-    <ellipse class="cy-cheek" cx="16.5" cy="39" rx="4" ry="2.6"/>
-    <ellipse class="cy-cheek" cx="47.5" cy="39" rx="4" ry="2.6"/>
-    <path class="cy-mouth" d="M28.5 38.5q3.5 3.4 7 0" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-  </symbol>
-</svg>
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -34,7 +19,6 @@
       <a href="#basics">そもそもの前提</a>
       <a href="#lessons">レッスン一覧</a>
       <a href="#words">用語ミニ辞典</a>
-      <a href="chat.html">チャシーに聞く</a>
     </nav>
   </div>
   <div class="progress" id="progress"></div>
@@ -228,11 +212,11 @@ button.onclick = () =&gt; {
       <span class="go">読む →</span>
     </a>
   </div>
-  <a class="chacy-banner" href="chat.html">
+  <div class="chacy-call">
     <svg aria-hidden="true"><use href="#chacy"/></svg>
-    <div><b>わからないことは、チャシーに聞いてね</b><p>やさしいAIのチャシーが、図も使ってわかりやすく教えてくれます。前の質問の続きも聞けます。</p></div>
-    <span class="go">話してみる →</span>
-  </a>
+    <div><b>わからないことは、右下のチャシーに聞いてね</b><p>どのページでも、画面の右下にいるよ。いま読んでいるページに合わせて、図も使ってやさしく教えてくれます。</p></div>
+    <button class="btn" type="button" data-open-chacy>チャシーを開く</button>
+  </div>
 </section>
 
 <!-- ================= 用語ミニ辞典 ================= -->
@@ -264,6 +248,8 @@ button.onclick = () =&gt; {
 </footer>
 
 <script src="assets/common.js"></script>
+<script src="assets/chat-config.js"></script>
+<script src="assets/chacy.js"></script>
 <script src="assets/hub.js"></script>
 </body>
 </html>
