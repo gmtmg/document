@@ -1,0 +1,11 @@
+# チャシーのサーバー（Cloudflare Workers）の設定
+name = "chacy"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+# チャシーを使ってよいサイトのアドレス（カンマ区切り）。GitHub Pages のアドレスを入れる
+ALLOWED_ORIGINS = "https://gmtmg.github.io"
+MODEL = "gpt-5.4-mini"
+
+# OPENAI_API_KEY はここには書かない。GitHub の Secrets から、デプロイ時に自動で設定される

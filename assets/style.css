@@ -851,3 +851,128 @@ body.page-net { --accent: var(--c-net); }
 }
 .lesson { display: flex; flex-direction: column; }
 .lesson .go { margin-top: auto; padding-top: 0.4rem; }
+
+/* ================= チャシー（chat.html） ================= */
+:root {
+  --c-chat: #d63d7a;
+  --cy-body: #ffd1e0;
+  --cy-belly: #fff0f5;
+  --cy-line: #b0335f;
+  --cy-ball: #ffd84d;
+  --cy-eye: #2b2230;
+  --cy-cheek: #ff8fb1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-chat: #ff8ab6;
+    --cy-body: #f7b6cd;
+    --cy-belly: #ffe3ee;
+    --cy-line: #ff8ab6;
+    --cy-cheek: #ff6f9f;
+  }
+}
+:root[data-theme="dark"] {
+  --c-chat: #ff8ab6;
+  --cy-body: #f7b6cd;
+  --cy-belly: #ffe3ee;
+  --cy-line: #ff8ab6;
+  --cy-cheek: #ff6f9f;
+}
+body.page-chat { --accent: var(--c-chat); }
+.cy-body { fill: var(--cy-body); stroke: var(--cy-line); stroke-width: 2; }
+.cy-belly { fill: var(--cy-belly); }
+.cy-eye { fill: var(--cy-eye); }
+.cy-shine { fill: #ffffff; }
+.cy-cheek { fill: var(--cy-cheek); opacity: 0.75; }
+.cy-mouth { stroke: var(--cy-eye); }
+.cy-antenna { stroke: var(--cy-line); }
+.cy-ball { fill: var(--cy-ball); stroke: var(--cy-line); stroke-width: 1.5; }
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.chat-wrap { max-width: 50rem; padding-block: 2rem 11rem; display: grid; gap: 1.5rem; }
+.chat-hero { display: grid; grid-template-columns: auto 1fr; gap: 1.2rem; align-items: start; }
+.chat-hero > * { min-width: 0; }
+.chacy-big { width: 6rem; height: 6rem; animation: float 3.2s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-5px) rotate(-2deg); } }
+.chat-hero h1 { font-family: var(--f-display); font-weight: 400; font-size: var(--step-3); }
+.chat-hero p { color: var(--ink-soft); margin-top: 0.4rem; }
+.chat-how { margin-top: 0.9rem; }
+
+.chat-log { display: grid; gap: 1.1rem; }
+.turn { display: grid; gap: 0.6rem; min-width: 0; }
+.turn.chacy { grid-template-columns: 2.6rem minmax(0, 1fr); align-items: start; }
+.turn.me { justify-items: end; }
+.avatar { width: 2.6rem; height: 2.6rem; }
+.turn.thinking .avatar { animation: hop 0.8s ease-in-out infinite; }
+@keyframes hop { 50% { transform: translateY(-4px); } }
+.bubble-u {
+  max-width: min(36rem, 88%); background: var(--accent); color: #fff; padding: 0.6rem 0.95rem;
+  border-radius: 18px 18px 4px 18px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7;
+}
+.bubble-c {
+  background: var(--sheet); border: 1px solid var(--line); border-radius: 4px 18px 18px 18px;
+  padding: 0.8rem 1.05rem; min-width: 0; line-height: 1.85; overflow-wrap: anywhere;
+}
+.turn.error .bubble-c { border-color: var(--ng); background: var(--ng-bg); }
+.turn.error .retry { margin-top: 0.6rem; font-size: 0.85rem; padding: 0.3rem 0.9rem; }
+
+.md > * + * { margin-top: 0.7rem; }
+.md p { margin: 0; }
+.md ul, .md ol { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.2rem; }
+.md strong { background: linear-gradient(transparent 60%, var(--marker) 60%); color: inherit; }
+.md h1, .md h2, .md h3, .md h4 { font-size: 1.05rem; font-family: var(--f-body); }
+.md code { font-size: 0.85em; background: var(--paper); padding: 0.05rem 0.35rem; border-radius: 4px; }
+.md pre { background: var(--code-bg); color: var(--code-fg); padding: 0.8rem 1rem; border-radius: 8px; overflow-x: auto; margin: 0; }
+.md pre code { background: none; padding: 0; color: inherit; font-size: 0.82rem; }
+.md blockquote { margin: 0; padding-left: 0.9rem; border-left: 3px solid var(--line); color: var(--ink-soft); }
+.md a { color: var(--accent); }
+.md-table { overflow-x: auto; }
+.md table { border-collapse: collapse; font-size: 0.9rem; min-width: 100%; }
+.md th, .md td { border: 1px solid var(--line); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+.md th { background: var(--paper); }
+.diagram { background: var(--paper); border-radius: 10px; padding: 0.8rem; overflow-x: auto; text-align: center; }
+.diagram svg { max-width: 100%; height: auto; }
+.diagram-note { font-size: 0.85rem; color: var(--ink-soft); text-align: left; }
+.diagram pre { text-align: left; margin-top: 0.5rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-left: 3.2rem; }
+.chips button {
+  border: 1.5px solid var(--accent); color: var(--accent); background: var(--sheet); border-radius: 999px;
+  padding: 0.35rem 0.9rem; cursor: pointer; font-size: 0.9rem; line-height: 1.5; text-align: left;
+}
+.chips button:hover { background: var(--accent); color: #fff; }
+
+.composer {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 15;
+  background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line);
+  padding: 0.7rem 16px calc(0.6rem + env(safe-area-inset-bottom, 0px));
+}
+.composer-inner { max-width: 50rem; margin: 0 auto; display: flex; gap: 0.6rem; align-items: flex-end; }
+.composer textarea {
+  flex: 1; min-width: 0; resize: none; font: inherit; line-height: 1.6; padding: 0.6rem 0.9rem;
+  border-radius: 20px; border: 2px solid var(--line); background: var(--sheet); color: var(--ink); max-height: 200px;
+}
+.composer textarea:focus { outline: none; border-color: var(--accent); }
+.btn.send { background: var(--accent); border-color: var(--accent); color: #fff; padding: 0.55rem 1.3rem; }
+.btn.send.stop { background: var(--sheet); color: var(--ink); border-color: var(--ink); }
+.composer-foot { max-width: 50rem; margin: 0.35rem auto 0; display: flex; justify-content: space-between; gap: 1rem; font-size: 0.75rem; color: var(--ink-soft); flex-wrap: wrap; }
+.linkish { background: none; border: 0; padding: 0; color: var(--ink-soft); text-decoration: underline; cursor: pointer; font-size: 0.75rem; }
+.linkish.confirm { color: var(--ng); font-weight: 700; }
+
+/* トップページのチャシー案内 */
+.chacy-banner { display: grid; grid-template-columns: auto 1fr auto; gap: 1.2rem; align-items: center; background: var(--sheet); border: 2px solid var(--c-chat); border-radius: var(--radius); padding: 1.1rem 1.3rem; text-decoration: none; color: var(--ink); margin-top: 1rem; }
+.chacy-banner > * { min-width: 0; }
+.chacy-banner svg { width: 4rem; height: 4rem; }
+.chacy-banner b { font-size: 1.15rem; }
+.chacy-banner p { font-size: 0.92rem; color: var(--ink-soft); }
+.chacy-banner .go { color: var(--c-chat); font-weight: 700; white-space: nowrap; }
+
+@media (max-width: 560px) {
+  .chat-hero { grid-template-columns: 1fr; }
+  .chacy-big { width: 4.5rem; height: 4.5rem; }
+  .chips { padding-left: 0; }
+  .chacy-banner { grid-template-columns: auto 1fr; }
+  .chacy-banner .go { grid-column: 1 / -1; }
+}

@@ -11,6 +11,12 @@
 | AIアプリのしくみ | `ai-app.html` | ChatGPTとAIの違い、プロンプト、#の書き方、API、アプリ工房、敬語変換アプリ |
 | GitHubってなに？ | `github.html` | セーブ（コミット）体験、GitとGitHubの違い、プッシュ・プル、ブランチとプルリクエスト |
 | オンライン通信に対応しているアプリ | `online.html` | 機内モード体験、リクエストとレスポンス、データの置き場所、リアルタイム通信 |
+| チャシーに聞いてみよう | `chat.html` | やさしいAI「チャシー」とのチャット。会話の続きを覚えていて、必要なときは図や表で説明する |
+
+## チャシー（AIチャットボット）を動かすには
+
+チャシーには、APIキーを隠しておくための小さなサーバーが必要です。設定のしかたは [`worker/README.md`](worker/README.md) にまとめています。
+APIキーは GitHub の Secrets に登録し、GitHub Actions が自動でサーバー（Cloudflare Workers）に渡します。
 
 ## AIアプリのしくみ（ai-app.html）の章立て
 
@@ -47,6 +53,12 @@ assets/hub.js           トップページの動き
 assets/ai.js            AIアプリのページの動き
 assets/github.js        GitHubのページの動き
 assets/online.js        通信のページの動き
+chat.html               チャシーに聞いてみよう
+assets/chat.js          チャシーの画面の動き
+assets/chat-config.js   チャシーのサーバーのアドレス
+assets/vendor/          Markdown・図を表示するライブラリ（marked / DOMPurify / Mermaid）
+worker/                 チャシーのサーバー（Cloudflare Workers）
+.github/workflows/      チャシーのサーバーを自動で公開する設定
 assets/data.js          実際のAI応答の記録（自動生成）
 assets/examples.js      AIページ第7章に表示するコード（自動生成）
 examples/keigo-app/     第7章の敬語変換アプリ（実際に動くサンプル）
