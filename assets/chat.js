@@ -69,6 +69,10 @@
       box.innerHTML = svg;
       fitSvg(box.querySelector("svg"));
       box.classList.add("ok");
+      box.tabIndex = 0;
+      box.setAttribute("role", "button");
+      box.setAttribute("aria-label", "図を大きく表示する");
+      box.insertAdjacentHTML("beforeend", '<span class="zoom-hint" aria-hidden="true">タップで大きく見る</span>');
     } catch {
       document.getElementById(id)?.remove();
       document.getElementById("d" + id)?.remove();
@@ -106,6 +110,133 @@
       wrap.appendChild(t);
     });
   }
+
+  /* ---------- 図を大きく見る（タップで全画面・ピンチやボタンで拡大） ---------- */
+  const lb = document.createElement("div");
+  lb.className = "lightbox";
+  lb.hidden = true;
+  lb.setAttribute("role", "dialog");
+  lb.setAttribute("aria-modal", "true");
+  lb.setAttribute("aria-label", "図を大きく表示");
+  lb.innerHTML = `
+    <div class="lb-stage"><div class="lb-canvas"></div></div>
+    <div class="lb-bar">
+      <button type="button" data-z="out" aria-label="小さくする">－</button>
+      <button type="button" data-z="fit">全体</button>
+      <button type="button" data-z="in" aria-label="大きくする">＋</button>
+      <button type="button" data-z="close" class="lb-close">閉じる</button>
+    </div>
+    <p class="lb-hint">指でつまんで拡大・ドラッグで移動できるよ</p>`;
+  document.body.appendChild(lb);
+  const stage = $(".lb-stage", lb);
+  const canvas = $(".lb-canvas", lb);
+  const view = { s: 1, x: 0, y: 0 };
+  let opened = null; // { box, svg, spacer }
+
+  let base = { w: 0, h: 0 };
+  // 拡大は図そのものの大きさを変えて描き直す（文字がぼやけない）。移動だけ transform で行う
+  const applyView = () => {
+    const svg = opened && opened.svg;
+    if (svg) {
+      svg.style.width = base.w * view.s + "px";
+      svg.style.height = base.h * view.s + "px";
+    }
+    canvas.style.transform = `translate(${view.x}px, ${view.y}px)`;
+  };
+  const zoomTo = (s) => { view.s = Math.min(6, Math.max(0.5, s)); applyView(); };
+  const resetView = () => { view.s = 1; view.x = 0; view.y = 0; applyView(); };
+
+  function openDiagram(box) {
+    const svg = $("svg", box);
+    if (!svg || opened) return;
+    const [, , w, h] = (svg.getAttribute("viewBox") || "").split(/\s+/).map(Number);
+    if (!w || !h) return;
+    // 図そのものを全画面に移す（元の場所には同じ高さの空きを残す）
+    const spacer = document.createElement("div");
+    spacer.style.height = box.getBoundingClientRect().height + "px";
+    box.style.display = "none";
+    box.after(spacer);
+    lb.hidden = false;
+    document.body.style.overflow = "hidden";
+    const fit = Math.min((stage.clientWidth - 24) / w, (stage.clientHeight - 24) / h, 3);
+    svg.dataset.inlineStyle = svg.getAttribute("style") || "";
+    base = { w: w * fit, h: h * fit };
+    svg.setAttribute("style", "max-width:none");
+    canvas.appendChild(svg);
+    opened = { box, svg, spacer };
+    resetView();
+    $(".lb-close", lb).focus();
+  }
+  function closeDiagram() {
+    if (!opened) return;
+    const { box, svg, spacer } = opened;
+    svg.setAttribute("style", svg.dataset.inlineStyle);
+    box.prepend(svg);
+    box.style.display = "";
+    spacer.remove();
+    lb.hidden = true;
+    document.body.style.overflow = "";
+    opened = null;
+    box.focus({ preventScroll: true });
+  }
+
+  log.addEventListener("click", (e) => {
+    const box = e.target.closest(".diagram.ok");
+    if (box) openDiagram(box);
+  });
+  log.addEventListener("keydown", (e) => {
+    const box = e.target.closest(".diagram.ok");
+    if (box && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openDiagram(box); }
+  });
+  lb.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-z]");
+    if (!b) return;
+    const z = b.dataset.z;
+    if (z === "close") closeDiagram();
+    else if (z === "fit") resetView();
+    else zoomTo(view.s * (z === "in" ? 1.4 : 1 / 1.4));
+  });
+  document.addEventListener("keydown", (e) => {
+    if (!opened) return;
+    if (e.key === "Escape") closeDiagram();
+    if (e.key === "+" || e.key === "=") zoomTo(view.s * 1.4);
+    if (e.key === "-") zoomTo(view.s / 1.4);
+  });
+  stage.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    zoomTo(view.s * Math.exp(-e.deltaY * 0.0015));
+  }, { passive: false });
+  stage.addEventListener("dblclick", () => (view.s > 1.2 ? resetView() : zoomTo(2.5)));
+
+  // 1本指でドラッグ移動、2本指でピンチ拡大
+  const pointers = new Map();
+  let gesture = null;
+  stage.addEventListener("pointerdown", (e) => {
+    stage.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    gesture = null;
+  });
+  stage.addEventListener("pointermove", (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    const prev = pointers.get(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 1) {
+      view.x += e.clientX - prev.x;
+      view.y += e.clientY - prev.y;
+      applyView();
+    } else if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      const dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (!gesture) gesture = { dist, s: view.s };
+      else zoomTo(gesture.s * (dist / gesture.dist));
+    }
+  });
+  const endPointer = (e) => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) gesture = null;
+  };
+  stage.addEventListener("pointerup", endPointer);
+  stage.addEventListener("pointercancel", endPointer);
 
   /* ---------- 吹き出し ---------- */
   function addUser(text) {
